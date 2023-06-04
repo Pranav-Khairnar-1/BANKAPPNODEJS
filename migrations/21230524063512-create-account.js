@@ -11,8 +11,8 @@ module.exports = {
       bankID: {
         type: Sequelize.UUID,
         references: {
-          model: 'bank',
-          key: 'bankID'
+          model: 'banks',
+          key: 'id'
         },
         onUpdate: 'cascade',
         onDelete: 'cascade'
@@ -20,11 +20,11 @@ module.exports = {
       balance: {
         type: Sequelize.INTEGER
       },
-      userID: {
+      customerID: {
         type: Sequelize.UUID,
         references: {
-          model: 'customer',
-          key: 'userID'
+          model: 'customers',
+          key: 'id'
         },
         onUpdate: 'cascade',
         onDelete: 'cascade'

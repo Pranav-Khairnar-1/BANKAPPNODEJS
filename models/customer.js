@@ -1,7 +1,11 @@
+
 'use strict';
+const uuid = require('uuid');
+const bcrypt = require('bcrypt')
 const {
-  Model
+  Model, UUID
 } = require('sequelize');
+const Customer = require('../view/customer');
 module.exports = (sequelize, DataTypes) => {
   class customer extends Model {
     /**
@@ -11,9 +15,9 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      customer.hasMany(models.account,{
+      customer.hasMany(models.account, {
         foreignKey: {
-          name: 'userID',
+          name: 'customerID',
           type: DataTypes.UUID
         },
         onDelete: 'CASCADE',
@@ -26,12 +30,24 @@ module.exports = (sequelize, DataTypes) => {
     lastName: DataTypes.STRING,
     email: DataTypes.STRING,
     mobile: DataTypes.STRING,
+    username: {
+      type: DataTypes.STRING,
+      defaultValue: 0,
+      allowNull: false
+    },
+    password: DataTypes.STRING,
+    isAdmin: DataTypes.BOOLEAN,
     netWorth: DataTypes.DECIMAL
   }, {
     sequelize,
     modelName: 'customer',
-    underscored: true,
     paranoid: true,
+    hooks: {
+      beforeCreate: async (customer) => {
+        customer.id = uuid.v4();
+        customer.password = await bcrypt.hash(customer.password, 10);
+      }
+    }
   });
   return customer;
 };

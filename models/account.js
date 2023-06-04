@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       account.belongsTo(models.customer, {
         foreignKey: {
-          name: 'userID',
+          name: 'customerID',
           type: DataTypes.UUID
         },
         onDelete: 'CASCADE',
@@ -34,7 +34,7 @@ module.exports = (sequelize, DataTypes) => {
   account.init({
     bankID: DataTypes.UUID,
     balance: DataTypes.INTEGER,
-    userID: DataTypes.UUID
+    customerID: DataTypes.UUID
   }, {
     sequelize,
     modelName: 'account',

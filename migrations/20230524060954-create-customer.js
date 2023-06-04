@@ -1,6 +1,7 @@
 'use strict';
 
 const { UUID } = require('sequelize');
+const { sequelize } = require('../models');
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
@@ -10,7 +11,7 @@ module.exports = {
         allowNull: false,
         // autoIncrement: true,
         primaryKey: true,
-        type: UUID
+        type: Sequelize.UUID
       },
       firstName: {
         type: Sequelize.STRING
@@ -21,11 +22,22 @@ module.exports = {
       email: {
         type: Sequelize.STRING
       },
+      username: {
+        type: Sequelize.STRING
+      },
+      password: {
+        type: Sequelize.STRING
+      },
+      isAdmin: {
+        type: Sequelize.BOOLEAN
+      },
       mobile: {
         type: Sequelize.STRING
       },
-      netWorth : {
-         type: Sequelize.DECIMAL
+      netWorth: {
+        type: Sequelize.DECIMAL,
+        allowNull: false,
+        defaultValue: 0
       },
       createdAt: {
         allowNull: false,
