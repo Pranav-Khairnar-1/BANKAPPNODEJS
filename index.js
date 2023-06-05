@@ -9,7 +9,7 @@ app.use(express.json())
 app.use('/api/v1/app', router)
 app.use(errorHandlerMiddleware)
 const startApp = () => {
-    let port = 3000
+    let port = 4000
     app.listen(port, console.log('server start'))
 }
 startApp()

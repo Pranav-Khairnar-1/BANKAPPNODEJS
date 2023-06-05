@@ -118,6 +118,6 @@ module.exports = {
     updateBankByID,
     deleteBankByID,
     getAllBanks,
-    login
+    // login
 
 }
