@@ -67,6 +67,9 @@ class jwttoken {
 
         try {
             const authHeader = req.headers.authorization;
+            const authHeader2 = req.headers.cookie;
+            console.log("THIS IS THE COOOKIE I FOUND ----------------->", authHeader2)
+
             if (!authHeader) {
                 throw new customError.authorizationError("token not provided");
             }

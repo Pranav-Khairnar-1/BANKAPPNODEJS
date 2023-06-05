@@ -21,6 +21,23 @@ module.exports = (sequelize, DataTypes) => {
 
       });
 
+      customer.hasMany(models.transactions, {
+        foreignKey: {
+          name: 'transferFrom',
+          type: DataTypes.UUID
+        },
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE'
+      });
+      customer.hasMany(models.transactions, {
+        foreignKey: {
+          name: 'transferTo',
+          type: DataTypes.UUID
+        },
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE'
+      });
+
       account.belongsTo(models.bank, {
         foreignKey: {
           name: 'bankID',

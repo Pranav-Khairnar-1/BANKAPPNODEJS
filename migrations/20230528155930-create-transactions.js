@@ -10,14 +10,26 @@ module.exports = {
         type: Sequelize.UUID
       },
       transferFrom: {
-        type: Sequelize.UUID
+        type: Sequelize.UUID,
+        references: {
+          model: 'account',
+          key: 'id'
+        },
+        onUpdate: 'cascade',
+        onDelete: 'cascade'
       },
       transferTO: {
         allowNull: true,
-        type: Sequelize.UUID
+        type: Sequelize.UUID,
+        references: {
+          model: 'account',
+          key: 'id'
+        },
+        onUpdate: 'cascade',
+        onDelete: 'cascade'
       },
       amount: {
-        type: Sequelize.INTEGER
+        type: Sequelize.FLOAT
       },
       createdAt: {
         allowNull: false,

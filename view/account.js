@@ -1,6 +1,6 @@
 
 const db = require("../models")
-const Account = require("../models/account")
+// const Account = require("../models/account")
 class Account {
     constructor(bankID, balance, customerID) {
         this.customerID = customerID

@@ -24,7 +24,7 @@ const getAllBanks = async (filters) => {
         query = Bank.applyFilters(filters, query)
         console.log(">>>>>>>>>getAllBanks service starte3333>>>>>>>", query);
         query.transaction = tran;
-        const allBanks = await Bank.getAllBanksQP(query);
+        const allBanks = await Bank.getAllBanks(query);
         tran.commit();
         console.log(">>>>>>>>>getAllBanks service ended>>>>>>>>");
         return allBanks
@@ -35,20 +35,20 @@ const getAllBanks = async (filters) => {
     }
 }
 
-const login = async (queryparams) => {
-    const tran = await db.sequelize.transaction()
+// const login = async (queryparams) => {
+//     const tran = await db.sequelize.transaction()
 
-    try {
-        const user = await Bank.verifyLogin(queryparams, tran)
-        await tran.commit()
+//     try {
+//         const user = await Bank.verifyLogin(queryparams, tran)
+//         await tran.commit()
 
-        return user
-    } catch (error) {
-        console.error(error)
-        await tran.rollback()
-        throw error
-    }
-}
+//         return user
+//     } catch (error) {
+//         console.error(error)
+//         await tran.rollback()
+//         throw error
+//     }
+// }
 
 const createBank = async (customerOBJ) => {
     const tran = await db.sequelize.transaction();

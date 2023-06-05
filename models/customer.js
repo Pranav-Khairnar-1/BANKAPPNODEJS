@@ -5,7 +5,7 @@ const bcrypt = require('bcrypt')
 const {
   Model, UUID
 } = require('sequelize');
-const Customer = require('../view/customer');
+// const Customer = require('../view/customer');
 module.exports = (sequelize, DataTypes) => {
   class customer extends Model {
     /**

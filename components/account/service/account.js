@@ -1,7 +1,10 @@
-const Account = require("../../../view/customer")
+const Account = require("../../../view/account")
 const db = require('../../../models');
+const { Op } = require('sequelize');
 const bank = require("../../../models/bank");
-const Customer = require("../../../models/customer");
+const customer = require("../../../models/customer");
+// const { request } = require("express");
+const transactions = require("../../../models/transactions")
 // const { customError } = require('../../../error')
 
 const getAllAccounts = async (filters) => {
@@ -11,15 +14,35 @@ const getAllAccounts = async (filters) => {
         let query = {
             where: {},
             include: [
-                { model: Customer, required: true },
-                { model: bank, required: true }
+                { model: customer, required: true },
+                { model: bank, required: true },
+                {
+                    model: transactions,
+                    name: Credit,
+                    where: {
+                        [Op.and]: {
+                            transferTO: null,
+                            amount: { [Op.gt]: 0 }
+                        }
+                    }
+                },
+                {
+                    model: transactions,
+                    name: Debit,
+                    where: {
+                        [Op.and]: {
+                            transferTO: null,
+                            amount: { [Op.lt]: 0 }
+                        }
+                    }
+                },
             ],
         };
         console.log(">>>>>>>>>getAllAccounts service starte22222222>>>>>>>", query);
         query = Account.applyFilters(filters, query)
         console.log(">>>>>>>>>getAllAccounts service starte3333>>>>>>>", query);
         query.transaction = tran;
-        const allAccounts = await Account.getAllAccountsQP(query);
+        const allAccounts = await Account.getAllAccounts(query);
         tran.commit();
         console.log(">>>>>>>>>getAllAccounts service ended>>>>>>>>");
         return allAccounts

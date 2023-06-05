@@ -1,6 +1,6 @@
 
 const db = require("../models")
-const Bank = require("../models/bank")
+// const Bank = require("../models/bank")
 class Bank {
     constructor(name, abbrevation, activeUsers, assetWorth) {
         this.name = name
@@ -33,12 +33,10 @@ class Bank {
         return query;
     }
 
-    static async getAllBanks(tran) {
+    static async getAllBanks(paramOBJ) {
         try {
             console.log(">>>>>>>>>getAllBanks view started>>>>>>>>");
-            let allBank = await db.Bank.findAll({
-                transaction: tran
-            })
+            let allBank = await db.Bank.findAll(paramOBJ)
             console.log(allBank)
             console.log(">>>>>>>>>getAllBanks view ended>>>>>>>>");
             return allBank

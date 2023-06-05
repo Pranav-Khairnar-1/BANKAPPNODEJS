@@ -11,12 +11,20 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      transactions.belongsTo(models.account, {
+        foreignKey: {
+          name: 'transferFrom',
+          type: DataTypes.UUID
+        },
+        onDelete: 'RESTRICT',
+        onUpdate: 'RESTRICT'
+      })
     }
   }
   transactions.init({
     transferFrom: DataTypes.UUID,
     transferTO: DataTypes.UUID,
-    amount: DataTypes.INTEGER,
+    amount: DataTypes.FLOAT,
   }, {
     sequelize,
     modelName: 'transactions',
