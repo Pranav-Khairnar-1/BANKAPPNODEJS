@@ -80,10 +80,12 @@ class Customer {
     static async getAllCustomers(tran) {
         try {
             console.log(">>>>>>>>>getAllCustomers view started>>>>>>>>");
-            let allCustomer = await db.customer.findAll({
+            let { count, allCustomer } = await db.customer.findAndCountAll({
                 transaction: tran
             })
             console.log(allCustomer)
+            console.log("asdfdcsdfDFwFWWRGW!!!!!!!!!", count)
+            allCustomer.count = count
             console.log(">>>>>>>>>getAllCustomers view ended>>>>>>>>");
             return allCustomer
         } catch (error) {
@@ -95,10 +97,16 @@ class Customer {
     static async getAllCustomersQP(paramOBJ) {
         try {
             console.log(">>>>>>>>>getAllCustomersQP view started>>>>>>>>");
-            let allCustomer = await db.customer.findAll(paramOBJ)
-            console.log(allCustomer)
+            let { count, rows } = await db.customer.findAndCountAll(paramOBJ)
+            console.log(rows)
+            console.log("asdfdcsdfDFwFWWRGW!!!!!!!!!", count)
+            // rows.count = count
+            const returnOBJ = {
+                data: rows,
+                count: count
+            }
             console.log(">>>>>>>>>getAllCustomersQP view ended>>>>>>>>");
-            return allCustomer
+            return returnOBJ
         } catch (error) {
             console.log(error)
             throw error
@@ -136,6 +144,9 @@ class Customer {
                 transaction: tran
             })
             console.log(Customer)
+            if (customers.length < 1) {
+                throw new validationError("User Not Found")
+            }
             console.log("getCustomerByID view ended>>>>>>>>>>>>>>>>>>>>>>")
             return Customer
 
@@ -147,6 +158,8 @@ class Customer {
     async updateCustomerByID(CustomerOBJ, ID, tran) {
         try {
             console.log("updateCustomerByID view started>>>>>>>>>>>>>>>>>>>>>>")
+            // let find = await this.getCustomerByID(ID, tran);
+            // console.log(find);
             let Customer = await db.customer.update(CustomerOBJ, {
                 where: {
                     id: ID
@@ -165,17 +178,52 @@ class Customer {
     }
 
     async Validate() {
+        const emaiRegex = /@/;
         if (this.firstName == "" || this.firstName == null) {
             throw new validationError("Invalid First Name.")
         }
         if (this.lastName == "" || this.lastName == null) {
             throw new validationError("Invalid Las Name.")
         }
+        if (this.username == "" || this.username == null) {
+            throw new validationError("Invalid User Name.")
+        }
+        if (this.email == "" || this.email == null || !emaiRegex.test(this.email)) {
+            throw new validationError("Invalid Email.")
+        }
         if (this.mobile == "" || this.mobile == null || this.mobile.length != 10) {
             throw new validationError("Invalid Mobile Number.")
         }
         if (this.password == "" || this.password == null || this.password.length < 8) {
             throw new validationError("Invalid Password.")
+        }
+        if (!(typeof this.isAdmin === 'boolean')) {
+            throw new validationError("Admin Flag must be a boolean value.")
+        }
+    }
+
+    async ValidateForUpdate() {
+        const emaiRegex = /@/;
+        if (this.firstName == "" || this.firstName == null) {
+            throw new validationError("Invalid First Name.")
+        }
+        if (this.lastName == "" || this.lastName == null) {
+            throw new validationError("Invalid Las Name.")
+        }
+        if (!(this.username == undefined || this.username == null)) {
+            throw new validationError("User Name Can not be updated!!")
+        }
+        if (this.email == "" || this.email == null || !emaiRegex.test(this.email)) {
+            throw new validationError("Invalid Email.")
+        }
+        if (this.mobile == "" || this.mobile == null || this.mobile.length != 10) {
+            throw new validationError("Invalid Mobile Number.")
+        }
+        if (!(this.password == null || this.password == undefined)) {
+            throw new validationError("Password Can not be Updated!")
+        }
+        if (!(typeof this.isAdmin === 'boolean')) {
+            throw new validationError("Admin Flag must be a boolean value.")
         }
     }
 

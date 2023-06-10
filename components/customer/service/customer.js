@@ -7,7 +7,10 @@ const getAllCustomers = async (filters) => {
     try {
         console.log(">>>>>>>>>getAllCustomers service started>>>>>>>>");
         let query = {
-            where: {}
+            where: {},
+            order: [
+                ['firstName','ASC']
+            ]
         };
         console.log(">>>>>>>>>getAllCustomers service starte22222222>>>>>>>", query);
         query = Customer.applyFilters(filters, query)
@@ -72,10 +75,10 @@ const getCustomerByID = async (ID) => {
 const updateCustomerByID = async (CustomerOBJ, ID) => {
     const tran = await db.sequelize.transaction();
     try {
-        console.log(">>>>>>>>>getCustomerByID service started>>>>>>>>");
+        console.log(">>>>>>>>>updateCustomerByID service started>>>>>>>>");
         const newCustomer = await CustomerOBJ.updateCustomerByID(CustomerOBJ, ID, tran);
         tran.commit();
-        console.log(">>>>>>>>>getCustomerByID service ended>>>>>>>>");
+        console.log(">>>>>>>>>updateCustomerByID service ended>>>>>>>>");
         return newCustomer;
     } catch (error) {
         console.log(error);

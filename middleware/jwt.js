@@ -39,29 +39,6 @@ class jwttoken {
             throw customError.authorizationError("Session expired. Please login again")
         }
     }
-    static authenticationMiddlewareAdmin = async (req, res, next) => {
-
-        try {
-            const authHeader = req.headers.authorization;
-            if (!authHeader) {
-                throw new customError.authorizationError("token not provided");
-            }
-            const token = authHeader
-
-            const decoded = jwt.verify(token, "GOD");
-            if (!decoded.isAdmin) {
-                throw new customError.authorizationError("Must Login as Admin to do this operation.");
-            }
-            console.log(" message", decoded);
-            next();
-        } catch (error) {
-            console.log(error);
-            console.log("<------ I got inside Catch of authorization error ----> ");
-
-            // throw new customError.authorizationError("route cannot be acccessed");
-            next(error)
-        }
-    }
 
     static authenticationMiddlewareAdmin = async (req, res, next) => {
 
@@ -100,7 +77,7 @@ class jwttoken {
 
             const decoded = jwt.verify(token, "GOD");
             if (!decoded.isAdmin) {
-                throw new customError.authorizationError("Must Login as Admin to do this operation.");
+                throw new customError.authorizationError("Must Login as User to do this operation.");
             }
             console.log(" message", decoded);
             next();

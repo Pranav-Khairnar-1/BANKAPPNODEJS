@@ -75,7 +75,7 @@ const login = async (req, res, next) => {
 //     }
 // }
 
-const getAllCustomers = async (req, resp) => {
+const getAllCustomers = async (req, resp, next) => {
     try {
         console.log(">>>>>>>>>getAllCustomers controller Started>>>>>>>>");
         const filterGod = req.query; // Extract query parameters
@@ -110,13 +110,13 @@ const getAllCustomers = async (req, resp) => {
     }
 }
 
-const createCustomer = async (req, resp) => {
+const createCustomer = async (req, resp, next) => {
     try {
         console.log(">>>>>>>>>createCustomer controller Started>>>>>>>>");
         const customer = new Customer(req.body)
         console.log("body of create------>", req.body)
         console.log("this is customer in  create customer----->", customer)
-        customer.Validate()
+        let valid = await customer.Validate();
         let customerOBJ = await createCustomerService(customer)
         resp.status(StatusCodes.OK).json(customerOBJ)
         console.log(">>>>>>>>>createCustomer controller Ended>>>>>>>>");
@@ -128,7 +128,7 @@ const createCustomer = async (req, resp) => {
     }
 }
 
-const getCustomerByID = async (req, resp) => {
+const getCustomerByID = async (req, resp, next) => {
     try {
         console.log(">>>>>>>>>getCustomerByID controller Started>>>>>>>>");
         let ID = req.params.id
@@ -145,14 +145,14 @@ const getCustomerByID = async (req, resp) => {
     }
 }
 
-const updateCustomerByID = async (req, resp) => {
+const updateCustomerByID = async (req, resp, next) => {
     try {
         console.log(">>>>>>>>>updateCustomerByID controller Started>>>>>>>>");
         let ID = req.params.id
 
         const cust = new Customer(req.body)
 
-        cust.Validate();
+        let valid = await cust.ValidateForUpdate();
         let updatedCustomer = await updateCustomerByIDService(cust, ID)
 
         resp.status(StatusCodes.OK).json({ message: "Customer Updated successfully." })
@@ -163,7 +163,7 @@ const updateCustomerByID = async (req, resp) => {
     }
 }
 
-const deleteCustomerByID = async (req, resp) => {
+const deleteCustomerByID = async (req, resp, next) => {
     try {
         console.log(">>>>>>>>>>>>deleteCustomerByID controller started >>>>>>>")
         console.log("ID inside delete customer by ID---->", req.params.id)

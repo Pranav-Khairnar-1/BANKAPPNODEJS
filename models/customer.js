@@ -3,7 +3,7 @@
 const uuid = require('uuid');
 const bcrypt = require('bcrypt')
 const {
-  Model, UUID
+  Model
 } = require('sequelize');
 // const Customer = require('../view/customer');
 module.exports = (sequelize, DataTypes) => {
