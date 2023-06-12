@@ -10,14 +10,14 @@ const {
 } = require('./controller/bank')
 const JwtToken = require('../../middleware/jwt')
 
-bankRouter.get('/',JwtToken.authenticationMiddlewareAdmin,getAllBanksController)
+bankRouter.get('/', getAllBanksController)
 // bankRouter.post('/login', loginController)
 
 // bankRouter.get('/qparams', getAllBanksQparamsController)
-bankRouter.post('/new',JwtToken.authenticationMiddlewareAdmin, createBankController)
-bankRouter.get('/:id',JwtToken.authenticationMiddlewareAdmin, getBankByIDController)
-bankRouter.put('/update/:id',JwtToken.authenticationMiddlewareAdmin, updateBankByIDController)
-bankRouter.delete('/delete/:id',JwtToken.authenticationMiddlewareAdmin, deleteBankByIDController)
+bankRouter.post('/new', JwtToken.authenticationMiddlewareAdmin, createBankController)
+bankRouter.get('/:id', JwtToken.authenticationMiddlewareAdmin, getBankByIDController)
+bankRouter.put('/update/:id', JwtToken.authenticationMiddlewareAdmin, updateBankByIDController)
+bankRouter.delete('/delete/:id', JwtToken.authenticationMiddlewareAdmin, deleteBankByIDController)
 
 
 

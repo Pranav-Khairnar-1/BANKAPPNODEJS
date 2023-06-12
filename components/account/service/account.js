@@ -1,4 +1,6 @@
 const Account = require("../../../view/account")
+const Transaction = require('../../../view/transaction')
+
 const db = require('../../../models');
 const { Op } = require('sequelize');
 const bank = require("../../../models/bank");
@@ -14,28 +16,8 @@ const getAllAccounts = async (filters) => {
         let query = {
             where: {},
             include: [
-                { model: customer, required: true },
-                { model: bank, required: true },
-                {
-                    model: transactions,
-                    name: Credit,
-                    where: {
-                        [Op.and]: {
-                            transferTO: null,
-                            amount: { [Op.gt]: 0 }
-                        }
-                    }
-                },
-                {
-                    model: transactions,
-                    name: Debit,
-                    where: {
-                        [Op.and]: {
-                            transferTO: null,
-                            amount: { [Op.lt]: 0 }
-                        }
-                    }
-                },
+                { model: db.customer, required: true },
+                { model: db.bank, required: true },
             ],
         };
         console.log(">>>>>>>>>getAllAccounts service starte22222222>>>>>>>", query);
@@ -47,7 +29,41 @@ const getAllAccounts = async (filters) => {
         console.log(">>>>>>>>>getAllAccounts service ended>>>>>>>>");
         return allAccounts
     } catch (error) {
-        tran.tollback();
+        tran.rollback();
+        console.log(error);
+        throw (error);
+    }
+}
+
+const getAllAccountsAdmin = async (filters) => {
+    const tran = await db.sequelize.transaction();
+    try {
+        console.log(">>>>>>>>>getAllAccountsAdmin service started>>>>>>>>");
+        let query = {
+            where: {},
+            include: [
+                {
+                    model: db.customer,
+                    required: true
+                },
+                {
+                    model: db.bank,
+                    requred: true
+                }
+            ]
+
+
+        };
+        console.log(">>>>>>>>>getAllAccountsAdmin service starte22222222>>>>>>>", query);
+        query = Account.applyFilters(filters, query)
+        console.log(">>>>>>>>>getAllAccountsAdmin service starte3333>>>>>>>", query);
+        query.transaction = tran;
+        const allCustomers = await Account.getAllAccounts(query);
+        tran.commit();
+        console.log(">>>>>>>>>getAllAccountsAdmin service ended>>>>>>>>");
+        return allCustomers
+    } catch (error) {
+        tran.rollback();
         console.log(error);
         throw (error);
     }
@@ -68,11 +84,18 @@ const getAllAccounts = async (filters) => {
 //     }
 // }
 
-const createAccount = async (customerOBJ) => {
+const createAccount = async (accountOBJ) => {
     const tran = await db.sequelize.transaction();
+
     try {
         console.log(">>>>>>>>>createAccount service started>>>>>>>>");
-        const newAccount = await customerOBJ.createAccount(tran);
+        const newAccount = await accountOBJ.createAccount(tran); 
+        const credTran = new Transaction({
+            transferFrom: newAccount.id,
+            amount: accountOBJ.balance
+        })
+        let flag = await credTran.createCreditTransaction(tran);
+
         tran.commit();
         console.log(">>>>>>>>>createAccount service ended>>>>>>>>");
         return newAccount;
@@ -135,4 +158,5 @@ module.exports = {
     updateAccountByID,
     deleteAccountByID,
     getAllAccounts,
+    getAllAccountsAdmin
 }

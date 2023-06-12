@@ -1,17 +1,19 @@
 const { StatusCodes } = require('http-status-codes')
-const Transactions = require('../../../view/bank')
+const Transactions = require('../../../view/transaction')
 const {
     getAllTransactions: getAllTransactionService,
     createTransactions: createTransactionsService,
+    createTransferTransactions: createTransferTransactionsService
 } = require('../service/transaction')
 
 
 
 
 
-const getAllTransactions = async (req, resp) => {
+const getAllTransactions = async (req, resp, next) => {
     try {
         console.log(">>>>>>>>>getAllTransactionss controller Started>>>>>>>>");
+        let ID = req.params.id
         const filterGod = req.query; // Extract query parameters
         console.log("This is query god filter in controller ------>", filterGod)
         // Array to store filters dynamically
@@ -27,7 +29,7 @@ const getAllTransactions = async (req, resp) => {
         }
         console.log("for loop ended ------>", filters)
 
-        let allTransactionss = await getAllTransactionService(filters)
+        let allTransactionss = await getAllTransactionService(ID,filters)
         console.log("Service returned------>", allTransactionss)
 
         // if (!allTransactionss) {
@@ -44,7 +46,7 @@ const getAllTransactions = async (req, resp) => {
     }
 }
 
-const createTransaction = async (req, resp) => {
+const createTransaction = async (req, resp, next) => {
     try {
         console.log(">>>>>>>>>createTransactions controller Started>>>>>>>>");
         const transaction = new Transactions(req.body)
@@ -62,9 +64,28 @@ const createTransaction = async (req, resp) => {
     }
 }
 
+const createTransferTransaction = async (req, resp, next) => {
+    try {
+        console.log(">>>>>>>>>createTransactions controller Started>>>>>>>>");
+        const transaction = new Transactions(req.body)
+        console.log("body of create------>", req.body)
+        console.log("this is transaction in  create transaction----->", transaction)
+        // transaction.Validate()
+        let transactionOBJ = await createTransferTransactionsService(transaction)
+        resp.status(StatusCodes.OK).json(transactionOBJ)
+        console.log(">>>>>>>>>createTransactions controller Ended>>>>>>>>");
+
+    } catch (error) {
+        // resp.status(StatusCodes.INTERNAL_SERVER_ERROR).json(error)
+        next(error)
+
+    }
+}
+
 
 module.exports = {
     getAllTransactions,
     createTransaction,
+    createTransferTransaction
     // login
 }

@@ -6,6 +6,7 @@ const {
     getAccountByID: getAccountByIDService,
     updateAccountByID: updateAccountByIDService,
     deleteAccountByID: deleteAccountByIDService,
+    getAllAccountsAdmin: getAllAccountsAdminService
     // login: loginService
     // getAllAccounts: getAllAccountsQparamsService
 } = require('../service/account')
@@ -13,10 +14,42 @@ const {
 // const  ValidationError  = require('../../../error/validationError')
 
 
+const getAllAccountsAdmin = async (req, resp, next) => {
+    try {
+        console.log(">>>>>>>>>getAllAccountsAdmin controller Started>>>>>>>>");
+        const filterGod = req.query; // Extract query parameters
+        console.log("This is query god filter in controller ------>", filterGod)
+        // Array to store filters dynamically
+        const filters = [];
+
+        // Iterate over query parameters
+        for (const key in filterGod) {
+            if (filterGod.hasOwnProperty(key)) {
+                const value = filterGod[key];
+                // Build filters dynamically based on query parameters
+                filters.push({ field: key, value: value });
+            }
+        }
+        console.log("for loop ended ------>", filters)
+
+        let allCustomers = await getAllAccountsAdminService(filters)
+        console.log("Service returned------>", allCustomers)
+
+        console.log(">>>>>>>>>getAllCustomers controller Ended>>>>>>>>");
+
+        resp.status(StatusCodes.OK).json(allCustomers)
+
+    } catch (error) {
+        // resp.status(StatusCodes.INTERNAL_SERVER_ERROR).json(error)
+        next(error)
+    }
+}
 
 
 
-const getAllAccounts = async (req, resp) => {
+
+
+const getAllAccounts = async (req, resp, next) => {
     try {
         console.log(">>>>>>>>>getAllAccounts controller Started>>>>>>>>");
         const filterGod = req.query; // Extract query parameters
@@ -51,15 +84,14 @@ const getAllAccounts = async (req, resp) => {
     }
 }
 
-const createAccount = async (req, resp) => {
+const createAccount = async (req, resp, next) => {
     try {
         console.log(">>>>>>>>>createAccount controller Started>>>>>>>>");
-        const customer = new Account(req.body)
+        const account = new Account(req.body)
         console.log("body of create------>", req.body)
-        console.log("this is customer in  create customer----->", customer)
-        customer.Validate()
-        let customerOBJ = await createAccountService(customer)
-        resp.status(StatusCodes.OK).json(customerOBJ)
+        console.log("this is customer in  create account----->", account)
+        let accountOBJ = await createAccountService(account)
+        resp.status(StatusCodes.OK).json(accountOBJ)
         console.log(">>>>>>>>>createAccount controller Ended>>>>>>>>");
 
     } catch (error) {
@@ -67,7 +99,7 @@ const createAccount = async (req, resp) => {
     }
 }
 
-const getAccountByID = async (req, resp) => {
+const getAccountByID = async (req, resp, next) => {
     try {
         console.log(">>>>>>>>>getAccountByID controller Started>>>>>>>>");
         let ID = req.params.id
@@ -83,7 +115,7 @@ const getAccountByID = async (req, resp) => {
     }
 }
 
-const updateAccountByID = async (req, resp) => {
+const updateAccountByID = async (req, resp, next) => {
     try {
         console.log(">>>>>>>>>updateAccountByID controller Started>>>>>>>>");
         let ID = req.params.id
@@ -100,7 +132,7 @@ const updateAccountByID = async (req, resp) => {
     }
 }
 
-const deleteAccountByID = async (req, resp) => {
+const deleteAccountByID = async (req, resp, next) => {
     try {
         console.log(">>>>>>>>>>>>deleteAccountByID controller started >>>>>>>")
         console.log("ID inside delete customer by ID---->", req.params.id)
@@ -121,4 +153,5 @@ module.exports = {
     updateAccountByID,
     deleteAccountByID,
     getAllAccounts,
+    getAllAccountsAdmin
 }

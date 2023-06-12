@@ -39,7 +39,7 @@ const authenticationUser = async (req, res, next) => {
         const token = authHeader
 
         const decoded = jwt.verify(token, "GOD");
-        if (!decoded.isAdmin) {
+        if (decoded.isAdmin) {
             throw new customError.authorizationError("Must Login as User to do this operation.");
         }
         console.log(" message", decoded);

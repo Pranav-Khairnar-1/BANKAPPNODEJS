@@ -2,6 +2,8 @@
 const {
   Model
 } = require('sequelize');
+const uuid = require('uuid');
+
 module.exports = (sequelize, DataTypes) => {
   class account extends Model {
     /**
@@ -21,23 +23,7 @@ module.exports = (sequelize, DataTypes) => {
 
       });
 
-      account.hasMany(models.transactions, {
-        foreignKey: {
-          name: 'transferFrom',
-          type: DataTypes.UUID
-        },
-        onDelete: 'CASCADE',
-        onUpdate: 'CASCADE'
-      });
-      account.hasMany(models.transactions, {
-        foreignKey: {
-          name: 'transferTo',
-          type: DataTypes.UUID
-        },
-        onDelete: 'CASCADE',
-        onUpdate: 'CASCADE'
-      });
-
+      
       account.belongsTo(models.bank, {
         foreignKey: {
           name: 'bankID',
@@ -55,8 +41,12 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'account',
-    underscored: true,
-    paranoid: true
+    paranoid: true,
+    hooks: {
+      beforeCreate: async (account) => {
+        account.id = uuid.v4();
+      }
+    }
   });
   return account;
 };

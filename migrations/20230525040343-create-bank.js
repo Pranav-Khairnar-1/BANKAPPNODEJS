@@ -16,10 +16,14 @@ module.exports = {
         type: Sequelize.STRING
       },
       activeUsers: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        defaultValue: 0
       },
       assetWorth: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        defaultValue: 0
       },
       createdAt: {
         allowNull: false,
@@ -28,7 +32,7 @@ module.exports = {
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE
-      }, 
+      },
       deletedAt: {
         allowNull: true,
         type: Sequelize.DATE

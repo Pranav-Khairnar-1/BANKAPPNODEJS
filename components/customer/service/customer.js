@@ -9,8 +9,16 @@ const getAllCustomers = async (filters) => {
         let query = {
             where: {},
             order: [
-                ['firstName','ASC']
+                ['firstName', 'ASC']
+            ],
+            include: [
+                {
+                    model: db.account,
+                    include: [{ model: db.bank }]
+                }
             ]
+
+
         };
         console.log(">>>>>>>>>getAllCustomers service starte22222222>>>>>>>", query);
         query = Customer.applyFilters(filters, query)
@@ -21,7 +29,7 @@ const getAllCustomers = async (filters) => {
         console.log(">>>>>>>>>getAllCustomers service ended>>>>>>>>");
         return allCustomers
     } catch (error) {
-        tran.tollback();
+        tran.rollback();
         console.log(error);
         throw (error);
     }

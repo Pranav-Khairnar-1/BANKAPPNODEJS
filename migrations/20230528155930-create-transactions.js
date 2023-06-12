@@ -10,23 +10,12 @@ module.exports = {
         type: Sequelize.UUID
       },
       transferFrom: {
+        allowNull: false,
         type: Sequelize.UUID,
-        references: {
-          model: 'account',
-          key: 'id'
-        },
-        onUpdate: 'cascade',
-        onDelete: 'cascade'
       },
-      transferTO: {
+      transferTo: {
         allowNull: true,
         type: Sequelize.UUID,
-        references: {
-          model: 'account',
-          key: 'id'
-        },
-        onUpdate: 'cascade',
-        onDelete: 'cascade'
       },
       amount: {
         type: Sequelize.FLOAT
@@ -38,7 +27,18 @@ module.exports = {
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE
+      },
+      deletedAt: {
+        allowNull: true,
+        type: Sequelize.DATE
+      },
+      toClosingBalance: {
+        type: Sequelize.FLOAT
+      },
+      fromClosingBalance: {
+        type: Sequelize.FLOAT
       }
+
     });
   },
   async down(queryInterface, Sequelize) {

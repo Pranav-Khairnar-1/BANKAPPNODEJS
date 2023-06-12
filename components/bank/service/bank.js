@@ -1,7 +1,6 @@
 const Bank = require("../../../view/bank")
 const db = require('../../../models')
-const Account = require('../../../models/account')
-const Customer = require('../../../models/customer')
+
 // const { customError } = require('../../../error')
 
 const getAllBanks = async (filters) => {
@@ -12,11 +11,11 @@ const getAllBanks = async (filters) => {
             where: {},
             include: [
                 {
-                    model: Account,
+                    model: db.account,
                     include: [
-                        { model: Customer, required: true },
+                        { model: db.customer },
                     ],
-                    required: true
+
                 },
             ]
         };
@@ -29,7 +28,7 @@ const getAllBanks = async (filters) => {
         console.log(">>>>>>>>>getAllBanks service ended>>>>>>>>");
         return allBanks
     } catch (error) {
-        tran.tollback();
+        tran.rollback();
         console.log(error);
         throw (error);
     }

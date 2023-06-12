@@ -116,7 +116,7 @@ class Customer {
     async createCustomer(tran) {
         try {
             console.log("createCustomer view started>>>>>>>>>>>>>>>>>>>>>>")
-            await this.doesUserExists(tran);
+            let flag = await this.doesUserExists(tran);
             let newCustomer = await db.customer.create({
                 firstName: this.firstName,
                 lastName: this.lastName,

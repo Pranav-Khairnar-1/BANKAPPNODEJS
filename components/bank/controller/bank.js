@@ -6,15 +6,13 @@ const {
     getBankByID: getBankByIDService,
     updateBankByID: updateBankByIDService,
     deleteBankByID: deleteBankByIDService,
-    // login: loginService
-    // getAllBanks: getAllBanksQparamsService
 } = require('../service/bank')
 
 
 
 
 
-const getAllBanks = async (req, resp) => {
+const getAllBanks = async (req, resp, next) => {
     try {
         console.log(">>>>>>>>>getAllBanks controller Started>>>>>>>>");
         const filterGod = req.query; // Extract query parameters
@@ -49,15 +47,17 @@ const getAllBanks = async (req, resp) => {
     }
 }
 
-const createBank = async (req, resp) => {
+
+
+const createBank = async (req, resp, next) => {
     try {
         console.log(">>>>>>>>>createBank controller Started>>>>>>>>");
-        const customer = new Bank(req.body)
+        const bank = new Bank(req.body)
         console.log("body of create------>", req.body)
-        console.log("this is customer in  create customer----->", customer)
-        customer.Validate()
-        let customerOBJ = await createBankService(customer)
-        resp.status(StatusCodes.OK).json(customerOBJ)
+        console.log("this is customer in  create customer----->", bank)
+        let flag = await bank.Validate()
+        let bankOBJ = await createBankService(bank)
+        resp.status(StatusCodes.OK).json(bankOBJ)
         console.log(">>>>>>>>>createBank controller Ended>>>>>>>>");
 
     } catch (error) {
@@ -67,7 +67,7 @@ const createBank = async (req, resp) => {
     }
 }
 
-const getBankByID = async (req, resp) => {
+const getBankByID = async (req, resp, next) => {
     try {
         console.log(">>>>>>>>>getBankByID controller Started>>>>>>>>");
         let ID = req.params.id
@@ -84,7 +84,7 @@ const getBankByID = async (req, resp) => {
     }
 }
 
-const updateBankByID = async (req, resp) => {
+const updateBankByID = async (req, resp, next) => {
     try {
         console.log(">>>>>>>>>updateBankByID controller Started>>>>>>>>");
         let ID = req.params.id
@@ -102,7 +102,7 @@ const updateBankByID = async (req, resp) => {
     }
 }
 
-const deleteBankByID = async (req, resp) => {
+const deleteBankByID = async (req, resp, next) => {
     try {
         console.log(">>>>>>>>>>>>deleteBankByID controller started >>>>>>>")
         console.log("ID inside delete customer by ID---->", req.params.id)
@@ -125,5 +125,4 @@ module.exports = {
     updateBankByID,
     deleteBankByID,
     getAllBanks,
-    // login
 }

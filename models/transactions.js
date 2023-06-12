@@ -2,6 +2,8 @@
 const {
   Model
 } = require('sequelize');
+const uuid = require('uuid');
+
 module.exports = (sequelize, DataTypes) => {
   class transactions extends Model {
     /**
@@ -11,23 +13,27 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      transactions.belongsTo(models.account, {
-        foreignKey: {
-          name: 'transferFrom',
-          type: DataTypes.UUID
-        },
-        onDelete: 'RESTRICT',
-        onUpdate: 'RESTRICT'
-      })
+      
     }
   }
   transactions.init({
     transferFrom: DataTypes.UUID,
-    transferTO: DataTypes.UUID,
+    transferTo: {
+      type: DataTypes.UUID,
+      allowNull: true
+    },
     amount: DataTypes.FLOAT,
+    toClosingBalance: DataTypes.FLOAT,
+    fromClosingBalance: DataTypes.FLOAT
   }, {
     sequelize,
     modelName: 'transactions',
+    hooks: {
+      beforeCreate: async (transactions) => {
+        transactions.id = uuid.v4();
+      }
+    },
+    paranoid: true
   });
   return transactions;
 };

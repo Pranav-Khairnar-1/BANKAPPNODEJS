@@ -15,7 +15,7 @@ customerRouter.post('/login', loginController)
 
 // customerRouter.get('/qparams', getAllCustomersQparamsController)
 customerRouter.post('/new',JwtToken.authenticationMiddlewareAdmin, createCustomerController)
-customerRouter.get('/:id',JwtToken.authenticationMiddlewareAdmin, getCustomerByIDController)
+customerRouter.get('/:id', getCustomerByIDController)
 customerRouter.put('/update/:id',JwtToken.authenticationMiddlewareAdmin, updateCustomerByIDController)
 customerRouter.delete('/delete/:id',JwtToken.authenticationMiddlewareAdmin, deleteCustomerByIDController)
 
