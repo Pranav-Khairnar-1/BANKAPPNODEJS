@@ -1,6 +1,9 @@
 
 const db = require("../models")
 // const transactions = require("../models/bank")
+const uuid = require('uuid');
+const { validationError } = require('../error/index')
+
 class Transactions {
     constructor(obj) {
         this.transferFrom = obj.transferFrom
@@ -36,10 +39,38 @@ class Transactions {
             throw error
         }
     }
+
+    async doesAccountExist(ID, tran) {
+        try {
+            console.log("doesAccountExist view started>>>>>>>>>>>>>>>>>>>>>>")
+            let Account = await db.account.findAll({
+                where: {
+                    id: ID
+                },
+                transaction: tran
+            })
+            console.log(Account)
+            if (Account.length < 1) {
+                throw new validationError("Account Not Found")
+            }
+            console.log("doesAccountExist view ended>>>>>>>>>>>>>>>>>>>>>>")
+            return Account
+
+        } catch (error) {
+            console.log(error)
+            throw error
+        }
+    }
+
     async createCreditTransaction(tran) {
         try {
             console.log("createCreditTransaction view started>>>>>>>>>>>>>>>>>>>>>>")
             console.log("Value to find account--->", this.transferFrom);
+            let valid = uuid.validate(this.transferFrom)
+            if (!valid) {
+                throw new validationError("Invalid uuid");
+            }
+            await this.doesAccountExist(this.transferFrom, tran)
             const Account = await db.account.findOne({
                 where: {
                     id: this.transferFrom
@@ -130,6 +161,12 @@ class Transactions {
     async createDebitTransaction(tran) {
         try {
             console.log("createDebitTransaction view started>>>>>>>>>>>>>>>>>>>>>>")
+            let valid = uuid.validate(this.transferFrom)
+            if (!valid) {
+                throw new validationError("Invalid uuid");
+            }
+
+            await this.doesAccountExist(this.transferFrom, tran)
 
             const Account = await db.account.findOne({
                 where: {
@@ -193,6 +230,17 @@ class Transactions {
     async createTransferTransaction(tran) {
         try {
             console.log("createTransferTransaction view started>>>>>>>>>>>>>>>>>>>>>>")
+            let valid = uuid.validate(this.transferFrom)
+            if (!valid) {
+                throw new validationError("Invalid uuid");
+            }
+            let valid1 = uuid.validate(this.transferTo)
+            if (!valid1) {
+                throw new validationError("Invalid uuid");
+            }
+
+            let acc1 = await this.doesAccountExist(this.transferFrom, tran);
+            let acc2 = await this.doesAccountExist(this.transferTo, tran)
 
             const Account1 = await db.account.findOne({
                 where: {

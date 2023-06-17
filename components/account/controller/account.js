@@ -4,7 +4,6 @@ const {
     getAllAccounts: getAllAccountsService,
     createAccount: createAccountService,
     getAccountByID: getAccountByIDService,
-    updateAccountByID: updateAccountByIDService,
     deleteAccountByID: deleteAccountByIDService,
     getAllAccountsAdmin: getAllAccountsAdminService
     // login: loginService
@@ -88,6 +87,7 @@ const createAccount = async (req, resp, next) => {
     try {
         console.log(">>>>>>>>>createAccount controller Started>>>>>>>>");
         const account = new Account(req.body)
+        let validate = await account.validate()
         console.log("body of create------>", req.body)
         console.log("this is customer in  create account----->", account)
         let accountOBJ = await createAccountService(account)
@@ -115,22 +115,22 @@ const getAccountByID = async (req, resp, next) => {
     }
 }
 
-const updateAccountByID = async (req, resp, next) => {
-    try {
-        console.log(">>>>>>>>>updateAccountByID controller Started>>>>>>>>");
-        let ID = req.params.id
+// const updateAccountByID = async (req, resp, next) => {
+//     try {
+//         console.log(">>>>>>>>>updateAccountByID controller Started>>>>>>>>");
+//         let ID = req.params.id
 
-        const cust = new Account(req.body)
+//         const acc = new Account(req.body)
 
-        cust.Validate();
-        let updatedAccount = await updateAccountByIDService(cust, ID)
+//         acc.Validate();
+//         let updatedAccount = await updateAccountByIDService(cust, ID)
 
-        resp.status(StatusCodes.OK).json({ message: "Account Updated successfully." })
-        console.log(">>>>>>>>>updateAccountByID controller Ended>>>>>>>>");
-    } catch (error) {
-        next(error)
-    }
-}
+//         resp.status(StatusCodes.OK).json({ message: "Account Updated successfully." })
+//         console.log(">>>>>>>>>updateAccountByID controller Ended>>>>>>>>");
+//     } catch (error) {
+//         next(error)
+//     }
+// }
 
 const deleteAccountByID = async (req, resp, next) => {
     try {
@@ -150,7 +150,6 @@ module.exports = {
     getAllAccounts,
     createAccount,
     getAccountByID,
-    updateAccountByID,
     deleteAccountByID,
     getAllAccounts,
     getAllAccountsAdmin

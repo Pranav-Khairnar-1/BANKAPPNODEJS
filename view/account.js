@@ -3,6 +3,8 @@ const db = require("../models")
 const Transaction = require('../view/transaction')
 const { Op } = require("sequelize")
 const { validationError } = require('../error/index')
+const uuid = require('uuid');
+
 
 
 // const Account = require("../models/account")
@@ -53,10 +55,21 @@ class Account {
         }
         return query;
     }
+
+    async validate() {
+        if (!(uuid.validate(this.bankID))) {
+            throw new validationError("Invalid bank ID.")
+        }
+        if (!(uuid.validate(this.customerID))) {
+            throw new validationError("Invalid Customer ID.")
+        }
+    }
     async createAccount(tran) {
         try {
             console.log("createAccount view started>>>>>>>>>>>>>>>>>>>>>>")
             await this.doesAccountExists(tran);
+            await this.doesCustomerExist(this.customerID, tran)
+            await this.doesBankExist(this.bankID, tran)
             let newAccount = await db.account.create({
                 customerID: this.customerID,
                 bankID: this.bankID,
@@ -103,25 +116,52 @@ class Account {
             throw error
         }
     }
-    async updateAccountByID(AccountOBJ, ID, tran) {
+
+    static async doesCustomerExist(ID, tran) {
         try {
-            console.log("updateAccountByID view started>>>>>>>>>>>>>>>>>>>>>>")
-            let Account = await db.account.update(AccountOBJ, {
+            console.log("doesCustomerExist view started>>>>>>>>>>>>>>>>>>>>>>")
+            let Customer = await db.customer.findAll({
                 where: {
                     id: ID
                 },
                 transaction: tran
-            });
-            console.log(AccountOBJ)
-            console.log("This is what update returns--->", Account)
-            console.log("updateAccountByID view ended>>>>>>>>>>>>>>>>>>>>>>")
-            return Account
+            })
+            console.log(Customer)
+            if (customers.length < 1) {
+                throw new validationError("Customer Not Found")
+            }
+            console.log("doesCustomerExist view ended>>>>>>>>>>>>>>>>>>>>>>")
+            return Customer
 
         } catch (error) {
             console.log(error)
             throw error
         }
     }
+
+    async doesBankExist(ID, tran) {
+        try {
+            console.log("doesBankExist view started>>>>>>>>>>>>>>>>>>>>>>")
+            let Bank = await db.bank.findAll({
+                where: {
+                    id: ID
+                },
+                transaction: tran
+            })
+            console.log(Bank)
+            if (Bank.length < 1) {
+                throw new validationError("Bank Not Found")
+            }
+            console.log("doesBankExist view ended>>>>>>>>>>>>>>>>>>>>>>")
+            return Bank
+
+        } catch (error) {
+            console.log(error)
+            throw error
+        }
+    }
+
+
 
     static async deleteAccountByID(ID, tran) {
         try {

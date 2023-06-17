@@ -121,20 +121,7 @@ const getAccountByID = async (ID) => {
     }
 }
 
-const updateAccountByID = async (AccountOBJ, ID) => {
-    const tran = await db.sequelize.transaction();
-    try {
-        console.log(">>>>>>>>>getAccountByID service started>>>>>>>>");
-        const newAccount = await AccountOBJ.updateAccountByID(AccountOBJ, ID, tran);
-        tran.commit();
-        console.log(">>>>>>>>>getAccountByID service ended>>>>>>>>");
-        return newAccount;
-    } catch (error) {
-        console.log(error);
-        tran.rollback();
-        throw (error)
-    }
-}
+
 
 const deleteAccountByID = async (ID) => {
     const tran = await db.sequelize.transaction();
@@ -155,7 +142,6 @@ const deleteAccountByID = async (ID) => {
 module.exports = {
     getAccountByID,
     createAccount,
-    updateAccountByID,
     deleteAccountByID,
     getAllAccounts,
     getAllAccountsAdmin

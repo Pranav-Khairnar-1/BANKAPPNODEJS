@@ -10,10 +10,12 @@ module.exports = {
         type: Sequelize.UUID
       },
       name: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        unique: true
       },
       abbrevation: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        unique: true
       },
       activeUsers: {
         type: Sequelize.INTEGER,

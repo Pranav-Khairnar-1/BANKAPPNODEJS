@@ -40,16 +40,16 @@ class Bank {
     }
 
     async Validate() {
-        if (this.name == "" || this.name == null) {
+        if (this.name === "" || this.name == null) {
             throw new validationError("Invalid  Name.")
         }
-        if (this.abbrevation == "" || this.abbrevation == null) {
+        if (this.abbrevation === "" || this.abbrevation == null) {
             throw new validationError("Invalid Abbrevation")
         }
-        if (this.activeUsers < 0) {
+        if (!(typeof this.activeUsers === 'number')) {
             throw new validationError("Invalid Input For Active users.")
         }
-        if (this.assetWorth < 0) {
+        if (!(typeof this.assetWorth === 'number')) {
             throw new validationError("Invalid Input For asset worth.")
         }
 

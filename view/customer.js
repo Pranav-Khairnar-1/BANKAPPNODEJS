@@ -179,22 +179,22 @@ class Customer {
 
     async Validate() {
         const emaiRegex = /@/;
-        if (this.firstName == "" || this.firstName == null) {
+        if (this.firstName === "" || this.firstName == null) {
             throw new validationError("Invalid First Name.")
         }
-        if (this.lastName == "" || this.lastName == null) {
+        if (this.lastName === "" || this.lastName == null) {
             throw new validationError("Invalid Las Name.")
         }
-        if (this.username == "" || this.username == null) {
+        if (this.username === "" || this.username == null) {
             throw new validationError("Invalid User Name.")
         }
-        if (this.email == "" || this.email == null || !emaiRegex.test(this.email)) {
+        if (this.email === "" || this.email == null || !emaiRegex.test(this.email)) {
             throw new validationError("Invalid Email.")
         }
-        if (this.mobile == "" || this.mobile == null || this.mobile.length != 10) {
+        if (this.mobile === "" || this.mobile == null || this.mobile.length != 10) {
             throw new validationError("Invalid Mobile Number.")
         }
-        if (this.password == "" || this.password == null || this.password.length < 8) {
+        if (this.password === "" || this.password == null || this.password.length < 8) {
             throw new validationError("Invalid Password.")
         }
         if (!(typeof this.isAdmin === 'boolean')) {
@@ -204,19 +204,19 @@ class Customer {
 
     async ValidateForUpdate() {
         const emaiRegex = /@/;
-        if (this.firstName == "" || this.firstName == null) {
+        if (this.firstName === "" || this.firstName == null) {
             throw new validationError("Invalid First Name.")
         }
-        if (this.lastName == "" || this.lastName == null) {
+        if (this.lastName === "" || this.lastName == null) {
             throw new validationError("Invalid Las Name.")
         }
         if (!(this.username == undefined || this.username == null)) {
             throw new validationError("User Name Can not be updated!!")
         }
-        if (this.email == "" || this.email == null || !emaiRegex.test(this.email)) {
+        if (this.email === "" || this.email == null || !emaiRegex.test(this.email)) {
             throw new validationError("Invalid Email.")
         }
-        if (this.mobile == "" || this.mobile == null || this.mobile.length != 10) {
+        if (this.mobile === "" || this.mobile == null || this.mobile.length != 10) {
             throw new validationError("Invalid Mobile Number.")
         }
         if (!(this.password == null || this.password == undefined)) {
