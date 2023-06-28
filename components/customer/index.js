@@ -10,6 +10,7 @@ const {
 } = require('./controller/customer')
 const JwtToken = require('../../middleware/jwt')
 
+
 customerRouter.get('/',JwtToken.authenticationMiddlewareAdmin,getAllCustomersController)
 customerRouter.post('/login', loginController)
 

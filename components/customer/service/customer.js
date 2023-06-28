@@ -21,7 +21,7 @@ const getAllCustomers = async (filters) => {
 
         };
         console.log(">>>>>>>>>getAllCustomers service starte22222222>>>>>>>", query);
-        query = Customer.applyFilters(filters, query)
+        query = await Customer.applyFilters(filters, query)
         console.log(">>>>>>>>>getAllCustomers service starte3333>>>>>>>", query);
         query.transaction = tran;
         const allCustomers = await Customer.getAllCustomersQP(query);

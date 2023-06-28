@@ -26,18 +26,40 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   customer.init({
-    firstName: DataTypes.STRING,
-    lastName: DataTypes.STRING,
-    email: DataTypes.STRING,
-    mobile: DataTypes.STRING,
-    username: {
+    firstName: {
       type: DataTypes.STRING,
-      defaultValue: 0,
       allowNull: false
     },
-    password: DataTypes.STRING,
-    isAdmin: DataTypes.BOOLEAN,
-    netWorth: DataTypes.DECIMAL
+    lastName: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    email: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    mobile: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    username: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true
+    },
+    password: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    isAdmin: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false
+    },
+    netWorth: {
+      type: DataTypes.DECIMAL,
+      defaultValue: 0,
+      allowNull: false
+    }
   }, {
     sequelize,
     modelName: 'customer',

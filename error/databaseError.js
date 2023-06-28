@@ -1,10 +1,10 @@
 const CustomError = require("./customError")
 
-class authenticationError extends CustomError {
+class databaseError extends CustomError {
     constructor(errMessage) {
-        super(errMessage, 403)
+        super(errMessage, 520)
         // this.message = errMessage
     }
 }
 
-module.exports = authenticationError
+module.exports = databaseError

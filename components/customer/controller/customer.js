@@ -1,5 +1,8 @@
 const { StatusCodes } = require('http-status-codes')
 const Customer = require('../../../view/customer')
+const uuid = require('uuid');
+// const {} = require('../../../error')
+
 const {
     getAllCustomers: getAllCustomersService,
     createCustomer: createCustomerService,
@@ -10,17 +13,26 @@ const {
     // getAllCustomers: getAllCustomersQparamsService
 } = require('../service/customer')
 const JwtToken = require('../../../middleware/jwt')
-const ValidationError = require('../../../error/validationError')
+const { validationError, customError, databaseError } = require('../../../error');
 
 
 const login = async (req, res, next) => {
+    console.log("Before try");
+
     try {
+        console.log("Before parsed");
+
         const { username, password } = req.body
+        console.log("Successfully parsed");
         if (!username || !password) {
             res
                 .status(StatusCodes.BAD_REQUEST)
                 .json({ error: 'Username and password must be specified' })
             return
+        }
+
+        if (typeof username !== "string" || typeof password !== "string") {
+            throw new validationError("Username And Password Must Be a String")
         }
         const queryparams = {}
         queryparams.username = username
@@ -55,25 +67,16 @@ const login = async (req, res, next) => {
             token: token
         })
     } catch (errr) {
-        console.error("error>>>>>>", errr)
-        next(errr)
+        if (errr instanceof customError) {
+            console.error("error>>>>>>", errr)
+            next(errr)
+        } else {
+            let error = new databaseError(errr.message)
+            next(error)
+        }
     }
 }
 
-// const getAllCustomers = async (req, resp) => {
-//     try {
-//         console.log(">>>>>>>>>getAllCustomers controller Started>>>>>>>>");
-//         let allCustomers = await getAllCustomersService()
-//         if (!allCustomers) {
-//             resp.status(StatusCodes.NOT_FOUND).json({ message: "No records Found" })
-//             return
-//         }
-//         resp.status(StatusCodes.OK).json(allCustomers)
-//         console.log(">>>>>>>>>getAllCustomers controller Ended>>>>>>>>");
-//     } catch (error) {
-//         resp.status(StatusCodes.INTERNAL_SERVER_ERROR).json(error)
-//     }
-// }
 
 const getAllCustomers = async (req, resp, next) => {
     try {
@@ -105,8 +108,13 @@ const getAllCustomers = async (req, resp, next) => {
         resp.status(StatusCodes.OK).json(allCustomers)
 
     } catch (error) {
-        // resp.status(StatusCodes.INTERNAL_SERVER_ERROR).json(error)
-        next(error)
+        if (error instanceof customError) {
+            console.error("error>>>>>>", error)
+            next(error)
+        } else {
+            let err = new databaseError(error.message)
+            next(err)
+        }
     }
 }
 
@@ -122,8 +130,13 @@ const createCustomer = async (req, resp, next) => {
         console.log(">>>>>>>>>createCustomer controller Ended>>>>>>>>");
 
     } catch (error) {
-        // resp.status(StatusCodes.INTERNAL_SERVER_ERROR).json(error)
-        next(error)
+        if (error instanceof customError) {
+            console.error("error>>>>>>", error)
+            next(error)
+        } else {
+            let err = new databaseError(error.message)
+            next(err)
+        }
 
     }
 }
@@ -132,6 +145,11 @@ const getCustomerByID = async (req, resp, next) => {
     try {
         console.log(">>>>>>>>>getCustomerByID controller Started>>>>>>>>");
         let ID = req.params.id
+        let flag = uuid.validate(ID)
+        if (!flag) {
+            throw new validationError("Invalid Customer ID.")
+        }
+        console.log("Value of flag in get customer by UUID------>", flag);
         let allCustomers = await getCustomerByIDService(ID)
         if (!allCustomers) {
             resp.status(StatusCodes.NOT_FOUND).json({ message: "No records Found" })
@@ -140,8 +158,13 @@ const getCustomerByID = async (req, resp, next) => {
         resp.status(StatusCodes.OK).json(allCustomers)
         console.log(">>>>>>>>>getCustomerByID controller Ended>>>>>>>>");
     } catch (error) {
-        // resp.status(StatusCodes.INTERNAL_SERVER_ERROR).json(error)
-        next(error)
+        if (error instanceof customError) {
+            console.error("error>>>>>>", error)
+            next(error)
+        } else {
+            let err = new databaseError(error.message)
+            next(err)
+        }
     }
 }
 
@@ -149,6 +172,11 @@ const updateCustomerByID = async (req, resp, next) => {
     try {
         console.log(">>>>>>>>>updateCustomerByID controller Started>>>>>>>>");
         let ID = req.params.id
+
+        let flag = uuid.validate(ID)
+        if (!flag) {
+            throw new validationError("Invalid Customer ID.")
+        }
 
         const cust = new Customer(req.body)
 
@@ -158,8 +186,13 @@ const updateCustomerByID = async (req, resp, next) => {
         resp.status(StatusCodes.OK).json({ message: "Customer Updated successfully." })
         console.log(">>>>>>>>>updateCustomerByID controller Ended>>>>>>>>");
     } catch (error) {
-        // resp.status(StatusCodes.INTERNAL_SERVER_ERROR).json(error)
-        next(error)
+        if (error instanceof customError) {
+            console.error("error>>>>>>", error)
+            next(error)
+        } else {
+            let err = new databaseError(error.message)
+            next(err)
+        }
     }
 }
 
@@ -167,14 +200,25 @@ const deleteCustomerByID = async (req, resp, next) => {
     try {
         console.log(">>>>>>>>>>>>deleteCustomerByID controller started >>>>>>>")
         console.log("ID inside delete customer by ID---->", req.params.id)
+        let ID = req.params.id
+
+        let flag = uuid.validate(ID)
+        if (!flag) {
+            throw new validationError("Invalid Customer ID.")
+        }
         let deletedCustomer = await deleteCustomerByIDService(req.params.id)
         resp.status(StatusCodes.OK).json({ message: "Customer deleted successfully." })
 
         console.log(">>>>>>>>>>>>deleteCustomerByID controller Ended >>>>>>>")
 
     } catch (error) {
-        // resp.status(StatusCodes.INTERNAL_SERVER_ERROR).json(error)
-        next(error)
+        if (error instanceof customError) {
+            console.error("error>>>>>>", error)
+            next(error)
+        } else {
+            let err = new databaseError(error.message)
+            next(err)
+        }
 
     }
 }

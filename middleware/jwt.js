@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken')
 const customError = require('../error')
+const customerView = require('../view/customer')
 
 class jwttoken {
     constructor(id, username, isAdmin) {
@@ -53,6 +54,8 @@ class jwttoken {
             const token = authHeader
 
             const decoded = jwt.verify(token, "GOD");
+            console.log("Authtoken",decoded);
+            const flag = await customerView.getCustomerByIDMiddleware(decoded.id)
             if (!decoded.isAdmin) {
                 throw new customError.authorizationError("Must Login as Admin to do this operation.");
             }
